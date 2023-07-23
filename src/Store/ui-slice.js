@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const uiSlice=createSlice({
     name:"ui",
+  
     initialState:{cartIsVisible:false},
     reducers:{
         // ii represent diffrent casses and events 
