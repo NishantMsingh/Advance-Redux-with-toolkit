@@ -4,7 +4,8 @@ import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import { useEffect  } from 'react';
 import Notification from "./components/UI/Notification"
-import { sentCartData } from './Store/cart-slice';
+import { fetchCartData, sentCartData } from './Store/cart-slice';
+
 
  let isInitial=true;
 function App() {
@@ -16,6 +17,8 @@ function App() {
    if(isInitial)
    {
     isInitial=false;
+    // {Here we will perform first time get request on laod}
+    dispatch(fetchCartData());
     return;
    }
    dispatch(sentCartData(cart));

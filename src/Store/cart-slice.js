@@ -43,7 +43,12 @@ const cartSlice = createSlice({
             state.totalQuantity--;
             state.totalAmount -= existingItem.price;  
         }
-    }
+    },
+    replaceCart(state, action) {
+      state.items = action.payload.items;
+      state.totalQuantity = action.payload.totalQuantity;
+      state.totalAmount = action.payload.totalAmount;
+    },
   },
 });
 
@@ -87,6 +92,47 @@ return async (dispatch)=>{
 
 }
 }
+// cart-slice.js
+// ... (existing code)
+
+export const fetchCartData = () => {
+  return async (dispatch) => {
+    dispatch(uiActions.showNotification({
+      status: "pending",
+      title: "Fetching...",
+      message: "Fetching Cart Data",
+    }));
+
+    const fetchData = async () => {
+      const response = await fetch("https://redux-fe1aa-default-rtdb.firebaseio.com/cart.json");
+
+      if (!response.ok) {
+        throw new Error("Fetching cart data failed.");
+      }
+
+      const data = await response.json();
+      return data;
+    };
+
+    try {
+      const cartData = await fetchData();
+      dispatch(cartAction.replaceCart(cartData)); // Assuming you have a 'replaceCart' action in your slice
+      dispatch(uiActions.showNotification({
+        status: "success",
+        title: "Success",
+        message: "Fetching Cart Data Successfully",
+      }));
+    } catch (error) {
+      dispatch(uiActions.showNotification({
+        status: "error",
+        title: "Fetching Error",
+        message: "Fetching Cart Data failed",
+      }));
+    }
+  };
+};
+
+// ... (existing code)
 
 export const cartAction = cartSlice.actions;
 export default cartSlice;
